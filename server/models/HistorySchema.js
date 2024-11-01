@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const HistorySchema = new mongoose.Schema(
   {
     description: String,
-    tag: String,
+    tag: {type: String, required: true},
     duration: Number,
   },
   {
@@ -11,6 +11,6 @@ const HistorySchema = new mongoose.Schema(
   }
 );
 
-const HistoryModel = mongoose.model("History", HistorySchema);
+const HistoryModel = mongoose.model("history", HistorySchema);
 
 export default HistoryModel;
