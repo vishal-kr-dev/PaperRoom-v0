@@ -3,7 +3,7 @@ import getAllData from "../controllers/HistoryController.js";
 
 const router = express.Router();
 
-router.get("/profile", getAllData);
-router.post("/profile");
+router.get("/:id", getAllData);
+router.post("/");
 
 export default router;

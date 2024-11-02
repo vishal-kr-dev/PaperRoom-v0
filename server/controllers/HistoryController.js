@@ -1,8 +1,8 @@
 import HistoryModel from "../models/HistorySchema.js";
 
-const putData = async () => {
+const putData = async (req, res) => {
   try {
-    const { description, tag, duration } = req.body;
+    const { tag, description, duration } = req.body;
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
