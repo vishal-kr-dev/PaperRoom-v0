@@ -1,14 +1,3 @@
-<<<<<<< Updated upstream
-import express from 'express'
-import dotev from 'dotenv'
-import cors from 'cors'
-import bodyParser from 'body-parser'
-import connectDB from './config/db.js'
-
-// Load variable from .env file
-dotev.config()
-connectDB()
-=======
 import express from "express";
 import dotev from "dotenv";
 import cors from "cors";
@@ -21,7 +10,6 @@ dotev.config();
 
 //Connection
 connectDB();
->>>>>>> Stashed changes
 
 const app = express();
 
@@ -29,11 +17,8 @@ app.use(cors())
 app.use(bodyParser.json())
 
 // Routes
-<<<<<<< Updated upstream
-=======
 app.use("/profile", HistoryRoute);
 app.use("/user", authRouter)
->>>>>>> Stashed changes
 
 const PORT = process.env.PORT || 5000
 
