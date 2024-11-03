@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const LoginForm = () => {
@@ -9,11 +9,18 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [loginError, setLoginError] = useState('');
 
+  const navigate = useNavigate()
+
   const onSubmit = async (data) => {
     console.log("This is data", data);
     try {
-      const response = await axios.post("http://localhost:3000/login", data);
-      console.log(response.data);
+      const response = await axios.post("http://localhost:5000/user/login", data);
+      // console.log(response);
+      
+      if(response.status === 200){
+        navigate('/')
+      }
+      
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401 || error.response.status == 400) {
@@ -42,7 +49,7 @@ const LoginForm = () => {
               {...register("username", {
                 required: "Username is required",
                 pattern: {
-                  value: /^[a-z0-9]+$/,
+                  // value: /^[a-z0-9]+$/,
                   message: "Invalid Username"
                 },
 
@@ -60,10 +67,10 @@ const LoginForm = () => {
                 type={showPassword ? "text" : "password"}
                 {...register("password", {
                   required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters"
-                  }
+                  // minLength: {
+                  //   value: 8,
+                  //   message: "Password must be at least 8 characters"
+                  // }
                 })}
                 className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-20"
                 placeholder="Password"
