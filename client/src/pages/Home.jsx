@@ -1,7 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import UserCard from '../components/UserCard';
+import useAuthStore from '../zustandStore/authStore';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(isAuthenticated){
+      navigate("/")
+    }else{
+      navigate("/login")
+    }
+  })
 
     const users = [
       {

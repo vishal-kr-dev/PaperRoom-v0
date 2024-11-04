@@ -1,41 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Eye, EyeOff } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
+import { useNavigate, Link } from 'react-router-dom';
+import useAuthStore from '../zustandStore/authStore'; // Adjust the path as needed
+import { Eye, EyeOff } from 'lucide-react'; 
 const LoginForm = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [loginError, setLoginError] = useState('');
+  const { login, loginError, resetLoginError, isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState('')
 
-  const navigate = useNavigate()
+  // Redirect if already authenticated
+  useEffect(() => {
+    console.log("The user is authenticated", isAuthenticated);
+    if (isAuthenticated) {
+      navigate('/'); // Redirect to home if logged in
+    }
+  }, [isAuthenticated, navigate]);
 
   const onSubmit = async (data) => {
-    console.log("This is data", data);
-    try {
-      const response = await axios.post("http://localhost:5000/user/login", data);
-      // console.log(response);
-      
-      if(response.status === 200){
-        navigate('/')
-      }
-      
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status === 401 || error.response.status == 400) {
-          setLoginError(error.response.data.message);
-          console.log("This is the error", error.response);
-        } else {
-          setLoginError("An unexpected error occured");
-        }
-      } else {
-        setLoginError("Network Error: Try again later");
-      }
-      console.log("There was an error while Logging in", error);
+    const userData = await login(data);
+    if (userData) {
+      // Handle successful login, e.g., navigate
+      navigate('/');
     }
   };
 
+  useEffect(() => {
+    resetLoginError(); // Reset error on mount
+  }, [resetLoginError]);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white-100">
       <div className="w-full max-w-md bg-white p-8">
