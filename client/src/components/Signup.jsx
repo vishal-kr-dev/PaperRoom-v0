@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
@@ -11,11 +11,14 @@ const SignUpForm = () => {
     formState: { errors, isSubmitting },
     watch,
   } = useForm();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
   const [usernameError, setUsernameError] = useState("");
   const username = watch("username");
+  const password = watch("password"); // Watch password field for validation
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -24,12 +27,10 @@ const SignUpForm = () => {
         "http://localhost:5000/user/register",
         data
       );
-      // console.log(response);
 
-      if(response.status === 201){
-        navigate('/login')
+      if (response.status === 201) {
+        navigate("/login");
       }
-      
     } catch (error) {
       console.log("Error while sending data", error);
       if (error.response && error.response.status === 409) {
@@ -38,7 +39,7 @@ const SignUpForm = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (username) {
       setUsernameError("");
     }
@@ -125,6 +126,41 @@ const SignUpForm = () => {
             </div>
             {errors.password && (
               <p className="text-xs text-red-600">{errors.password.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <div className="relative">
+              <label htmlFor="confirmPassword" className="sr-only">
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                {...register("confirmPassword", {
+                  required: "Confirm Password is required",
+                  validate: (value) =>
+                    value === password || "Passwords do not match",
+                })}
+                className="w-full px-3 py-2 border border-gray-300 focus:outline-none"
+                placeholder="Confirm Password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <Eye className="h-5 w-5 text-gray-400" />
+                )}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-xs text-red-600">
+                {errors.confirmPassword.message}
+              </p>
             )}
           </div>
 
