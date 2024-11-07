@@ -16,9 +16,5 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-<<<<<<< HEAD
-const UserModel = mongoose.model("users", UserSchema);
-=======
 const UserModel = mongoose.model("Users", UserSchema);
->>>>>>> History
 export default UserModel;

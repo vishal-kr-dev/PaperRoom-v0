@@ -13,7 +13,7 @@ const Home = () => {
     }else{
       navigate("/login")
     }
-  })
+  },[])
 
     const users = [
       {

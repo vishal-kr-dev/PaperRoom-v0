@@ -36,8 +36,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log(username);
-    console.log(password);
+    console.log(`Id: ${username} password: ${password}`)
 
     // Check if user exists
     const user = await UserModel.findOne({ username });
