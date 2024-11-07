@@ -1,0 +1,31 @@
+implement jwt
+
+host on vercel
+log form (points)
+charts
+sessions schema 
+rank list
+landing page
+assigning roomId(Schema {
+    active: user login
+    roomId
+    user[
+
+    ]
+})/ Inactive room deletion
+Goals page
+profile page history
+extension(timer maybe)
+
+animations
+
+implement password hashing
+adding point system
+admin pannel
+
+// Array of seven days one month or total array.length = 9
+
+room schema contains {
+    user
+    points []
+}
