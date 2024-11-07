@@ -9,6 +9,7 @@ dotev.config();
 connectDB();
 
 const app = express();
+
 app.use(express.json());
 app.use(
   cors({
@@ -19,7 +20,7 @@ app.use(
 );
 
 // Routes
-app.use("/profile", HistoryRoute);
+app.use("/history", HistoryRoute);
 
 const PORT = process.env.PORT || 5000;
 

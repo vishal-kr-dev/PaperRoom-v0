@@ -1,9 +1,9 @@
 import express from "express";
-import getAllData from "../controllers/HistoryController.js";
+import { createHistoryEntry, getHistoryEntries } from "../controllers/HistoryController.js";
 
 const router = express.Router();
 
-router.get("/:id", getAllData);
-router.post("/");
+router.post("/", createHistoryEntry);
+router.get("/:userId", getHistoryEntries);
 
 export default router;
