@@ -1,11 +1,12 @@
-implement jwt
-
+-implement jwt
+maintain unique description for each session
 host on vercel
 log form (points)
 charts
 sessions schema 
 rank list
 landing page
+make different logForm for different rooms possible(user defined logs)
 assigning roomId(Schema {
     active: user login
     roomId

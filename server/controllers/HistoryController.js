@@ -3,21 +3,37 @@ import UserModel from "../models/UserSchema.js";
 
 const createHistoryEntry = async (req, res) => {
   try {
-    const { userId, description, tag, duration } = req.body;
+    const { userId, description, tag } = req.body;
+    console.log("Data from frontend", userId, tag, description);
 
-    const newHistory = new HistoryModel({
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
+    // Check if the user already has a record for today
+    let history = await HistoryModel.findOne({
       user: userId,
-      description,
-      tag,
-      duration,
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
     });
 
-    await newHistory.save();
-    console.log("History entry saved successfully!");
-    res.status(201).json({
-      message: "History entry created successfully",
-      newHistory,
-    });
+    if (history) {
+      const updatedTags = [...new Set([...history.tag, ...tag])];
+
+      await HistoryModel.updateOne(
+        { _id: history._id },
+        {
+          $set: { description },
+          $addToSet: { tag: { $each: tag } },
+        }
+      );
+    } else {
+      await HistoryModel.create({
+        user: userId,
+        description,
+        tag: tag,
+      });
+    }
+    res.status(200).json({ msg: "Submitted successfully" });
   } catch (error) {
     console.log("Error while creating history entry: " + error.message);
     res.status(500).json({
@@ -29,10 +45,11 @@ const createHistoryEntry = async (req, res) => {
 const getHistoryEntries = async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log(userId);
 
     const historyEntries = await HistoryModel.find({ user: userId })
       .sort({ createdAt: -1 })
-      .populate("user", "username roomId");
+      // .populate("user", "username roomId");
 
     if (historyEntries.length === 0) {
       return res.status(404).json({ message: "No history entries found" });

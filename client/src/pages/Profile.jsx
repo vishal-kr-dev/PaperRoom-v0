@@ -8,10 +8,10 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/history");
-        console.table(response);
+        const response = await axios.get(`http://localhost:5000/history/Demo`);
+        console.log(response.data.historyEntries);
 
-        setData(response.data);
+        setData(response.data.historyEntries);
       } catch (error) {
         console.log(`Error while fetching the data: ${error}`);
       }
@@ -42,8 +42,8 @@ const Profile = () => {
       <section>
         <h1 className="text-2xl font-bold text-center">History</h1>
         <div>
-          {userHistory.map((history) => (
-            <HistoryCard key={history.id} {...history} />
+          {data.map((history, index) => (
+            <HistoryCard key={index} {...history} />
           ))}
         </div>
       </section>

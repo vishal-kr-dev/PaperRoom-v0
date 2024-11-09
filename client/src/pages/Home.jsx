@@ -40,7 +40,7 @@ const Home = () => {
         </button>
 
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <LogForm />
+          <LogForm setIsModalOpen={setIsModalOpen} />
         </Modal>
 
         <button className="text-lg px-3 py-1 text-black border-2 border-black hover:bg-gray-100 hover:scale-110 transition-transform duration-200">
