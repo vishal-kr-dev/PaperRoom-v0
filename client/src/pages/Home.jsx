@@ -1,35 +1,48 @@
-import React, { useEffect } from 'react'
-import UserCard from '../components/UserCard';
-import useAuthStore from '../zustandStore/authStore';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import UserCard from "../components/UserCard";
+import useAuthStore from "../zustandStore/authStore";
+import { useNavigate } from "react-router-dom";
+import Modal from "../components/Modal";
+import LogForm from "../components/LogForm";
 
 const Home = () => {
   const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(isAuthenticated){
-      navigate("/")
-    }else{
-      navigate("/login")
-    }
-  },[])
+  // For modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const users = [
-      {
-        name: "Unknown",
-        id: 1,
-        image: "https://placehold.co/600x400/000000/FFFFFF.png",
-      },
-    ];
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  const users = [
+    {
+      name: "Unknown",
+      id: 1,
+      image: "https://placehold.co/600x400/000000/FFFFFF.png",
+    },
+  ];
 
   return (
     <main className="flex flex-col h-screen">
       <nav className="flex items-center justify-between px-8 h-16 border-4 border-green-500">
         <h1 className="text-3xl font-bold">PaperRoom</h1>
-        <button className="flex items-center justify-center border-2 rounded-lg border-black px-20 lg:px-32 py-2 text-1xl font-bold">
+        <button
+          className="flex items-center justify-center border-2 rounded-lg border-black px-20 lg:px-32 py-2 text-1xl font-bold"
+          onClick={() => setIsModalOpen(true)}
+        >
           (+)
         </button>
+
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <LogForm />
+        </Modal>
+
         <button className="text-lg px-3 py-1 text-black border-2 border-black hover:bg-gray-100 hover:scale-110 transition-transform duration-200">
           Profile
         </button>
@@ -61,6 +74,6 @@ const Home = () => {
       </section>
     </main>
   );
-}
+};
 
-export default Home
+export default Home;

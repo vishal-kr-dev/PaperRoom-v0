@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import useAuthStore from "../zustandStore/authStore";
 
 const LogForm = () => {
   const {
@@ -8,6 +9,9 @@ const LogForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  // const {user} = useAuthStore();
+  // console.log(user)
 
   const onSubmit = async (data) => {
     const response = await axios.post("http://localhost:5000/history", {
@@ -20,8 +24,7 @@ const LogForm = () => {
   const formattedDate = currentDate.toISOString().split("T")[0];
 
   return (
-    <div className="h-screen w-screen bg-gray-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div>
         <h1 className="text-2xl font-semibold text-center mb-6">
           {formattedDate}
         </h1>
@@ -93,7 +96,6 @@ const LogForm = () => {
             </button>
           </div>
         </form>
-      </div>
     </div>
   );
 };
