@@ -3,8 +3,8 @@ import UserModel from "../models/UserSchema.js";
 
 const createHistoryEntry = async (req, res) => {
   try {
-    const { userId, description, tag } = req.body;
-    console.log("Data from frontend", userId, tag, description);
+    const { username, description, tag } = req.body;
+    console.log(`Data from frontend User: ${username} Tag: ${tag} Description: ${description}`);
 
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
@@ -12,7 +12,7 @@ const createHistoryEntry = async (req, res) => {
 
     // Check if the user already has a record for today
     let history = await HistoryModel.findOne({
-      user: userId,
+      username,
       createdAt: { $gte: startOfDay, $lte: endOfDay },
     });
 
@@ -28,7 +28,7 @@ const createHistoryEntry = async (req, res) => {
       );
     } else {
       await HistoryModel.create({
-        user: userId,
+        user: username,
         description,
         tag: tag,
       });
@@ -47,9 +47,10 @@ const getHistoryEntries = async (req, res) => {
     const { userId } = req.params;
     console.log(userId);
 
-    const historyEntries = await HistoryModel.find({ user: userId })
-      .sort({ createdAt: -1 })
-      // .populate("user", "username roomId");
+    const historyEntries = await HistoryModel.find({ user: userId }).sort({
+      createdAt: -1,
+    });
+    // .populate("user", "username roomId");
 
     if (historyEntries.length === 0) {
       return res.status(404).json({ message: "No history entries found" });

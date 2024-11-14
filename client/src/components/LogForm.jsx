@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import useAuthStore from "../zustandStore/authStore";
@@ -10,17 +10,19 @@ const LogForm = ({ setIsModalOpen }) => {
     formState: { errors },
   } = useForm();
 
-  const userId = "Demo";
-
   const onSubmit = async (data) => {
     try {
       const tag = Object.keys(data).filter((key) => data[key] === true);
-      const response = await axios.post("http://localhost:5000/history", {
-        userId,
-        tag,
-        description: data.description,
-      });
-      // console.log("From logFrom.jsx",userId, tag, data.description)
+      const response = await axios.post(
+        "http://localhost:5000/history",
+        { tag, description: data.description },
+        {
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
+          },
+        }
+      );
+      // console.log("From logFrom.jsx", tag, data.description);
       // console.log(response.status);
       if (response.status == 200) {
         setIsModalOpen(false);
