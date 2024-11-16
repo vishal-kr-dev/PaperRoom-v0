@@ -3,12 +3,13 @@ import axios from "axios";
 import HistoryCard from "../components/HistoryCard";
 
 const Profile = () => {
+  const baseURL = import.meta.env.VITE_BACK_URL;
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/history/Demo`);
+        const response = await axios.get(`${baseURL}/history/Demo`);
         console.log(response.data.historyEntries);
 
         setData(response.data.historyEntries);

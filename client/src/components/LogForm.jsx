@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import useAuthStore from "../zustandStore/authStore";
 
 const LogForm = ({ setIsModalOpen }) => {
+  const baseURL = import.meta.env.VITE_BACK_URL;
+  
   const {
     register,
     handleSubmit,
@@ -14,7 +16,7 @@ const LogForm = ({ setIsModalOpen }) => {
     try {
       const tag = Object.keys(data).filter((key) => data[key] === true);
       const response = await axios.post(
-        "http://localhost:5000/history",
+        `${baseURL}/history`,
         { tag, description: data.description },
         {
           headers: {

@@ -5,6 +5,8 @@ import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 
 const SignUpForm = () => {
+  const baseURL = import.meta.env.VITE_BACK_URL;
+
   const {
     register,
     handleSubmit,
@@ -23,10 +25,7 @@ const SignUpForm = () => {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      const response = await axios.post(
-        "http://localhost:5000/user/register",
-        data
-      );
+      const response = await axios.post(`${baseURL}/user/register`, data);
 
       if (response.status === 201) {
         navigate("/login");
