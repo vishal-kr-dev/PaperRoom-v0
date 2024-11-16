@@ -1,22 +1,3 @@
-// import express from 'express';
-// import cors from 'cors';
-// const app = express();
-// app.use(express.json());
-// app.use(cors({
-//     origin: ["https://vishal-kr.vercel.app/"],
-//     methods: ["POST", "GET"],
-//     credentilas: true
-// }));
-
-// app.get("/", (req, res) => {
-//     res.status(200).json({ message: "server is running" });
-// })
-
-// app.listen(5000, console.log("Server started on port 5000"));
-
-
-
-
 import express from "express";
 import dotev from "dotenv";
 import cors from "cors";
@@ -35,7 +16,7 @@ app.use(express.json());
 app.use(cors({
     origin: '*',
     methods: ["POST", "GET"],
-    credentilas: true
+    credentials: true
 }));
 
 // Routes
