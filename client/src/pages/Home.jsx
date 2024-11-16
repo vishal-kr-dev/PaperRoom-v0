@@ -15,6 +15,7 @@ const Home = () => {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
+      
     } else {
       navigate("/login");
     }

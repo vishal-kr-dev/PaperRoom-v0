@@ -2,6 +2,7 @@
 maintain unique description for each session
 host on vercel
 log form (points)
+jwt verification at startup and expiration
 charts
 sessions schema 
 rank list
