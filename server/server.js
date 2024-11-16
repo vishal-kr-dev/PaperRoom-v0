@@ -25,6 +25,9 @@ app.use(
 app.use("/history", HistoryRoute);
 app.use("/user", authRouter);
 app.use("/home", dataRouter)
+app.get("/", (req, res) => {
+  res.status(200).json({msg: "The server is up and running"})
+})
 
 const PORT = process.env.PORT || 5000;
 
