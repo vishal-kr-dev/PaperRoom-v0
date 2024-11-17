@@ -11,7 +11,7 @@ make different logForm for different rooms possible(user defined logs)
 assigning roomId(Schema {
     active: user login
     roomId
-    user[
+    user[ 
 
     ]
 })/ Inactive room deletion
