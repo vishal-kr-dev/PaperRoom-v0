@@ -6,106 +6,105 @@ import UserModel from "../models/UserSchema.js";
 const getLast14Days = () => {
   const today = new Date();
   const days = [];
+
   for (let i = 0; i < 14; i++) {
     const date = new Date(today);
-    date.setDate(today.getDate() - i);
-    date.setHours(0, 0, 0, 0); // Set to midnight for consistency
+    date.setUTCDate(today.getUTCDate() - i); // Adjust by subtracting days using UTC date
+    date.setUTCHours(0, 0, 0, 0); // Set time to midnight UTC
     days.push(date.toISOString().split("T")[0]); // Store date in YYYY-MM-DD format
   }
-  return days.reverse(); // To get the latest day first
+
+  return days.reverse(); // Reverse the array so that the latest day is first
 };
 
+
+// Main function to get all data for the users in the room
 const getAllData = async (req, res) => {
   try {
-    // Assuming `req.username` is set by your auth middleware or hardcoding for now
-    const username = "demo"; // Replace with `req.username` if using auth middleware
+    const { username } = req.body;
 
     // Fetch the user document based on the username
     const user = await UserModel.findOne({ username });
-    if (!user) {
-      return res.status(404).json({ msg: "User not found" });
-    }
+    if (!user) return res.status(404).json({ msg: "User not found" });
 
-    const roomId = user.roomId;
+    const room = await RoomModel.findOne({ roomId: user.roomId });
+    if (!room) return res.status(404).json({ msg: "Room not found" });
 
-    // Fetch the room document based on roomId
-    const room = await RoomModel.findOne({ roomId });
-    if (!room) {
-      return res.status(404).json({ msg: "Room not found" });
-    }
-
-    // In the room, users are just strings (usernames), not ObjectIds
     const users = room.users; // List of usernames in the room
-    if (!users || users.length === 0) {
+    if (!users || users.length === 0)
       return res.status(404).json({ msg: "No users found in this room" });
-    }
 
-    const last14Days = getLast14Days(); // List of all dates for the last 14 days
+    // Get the last 14 days in YYYY-MM-DD format
+    const last14Days = getLast14Days();
 
-    // Aggregate user activity data for the last 14 days
-    const data = await HistoryModel.aggregate([
-      // Match only the users in the room and activities from the last 14 days
-      {
-        $match: {
-          user: { $in: users }, // Match by username, not ObjectId
-          createdAt: { $gte: new Date(last14Days[0]) }, // Match from the first date
-        },
-      },
-      // Project day (YYYY-MM-DD) and calculate tagCount (number of tags)
-      {
-        $project: {
-          user: 1,
-          day: {
-            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
-          },
-          tagCount: { $size: "$tag" }, // Counts the number of tags
-        },
-      },
-      // Calculate points based on tag count (2 points per tag)
-      {
-        $addFields: {
-          points: { $multiply: ["$tagCount", 2] },
-        },
-      },
-      // Group by user and day, summing up the points for each user
-      {
-        $group: {
-          _id: { user: "$user", day: "$day" },
-          totalPoints: { $sum: "$points" },
-        },
-      },
-      // Sort by user and day (ascending)
-      { $sort: { "_id.user": 1, "_id.day": 1 } },
-    ]);
+    // Aggregate user activity data
+    const data = await aggregateUserActivity(users, last14Days);
 
-    // Log the aggregated data
-    console.log("Aggregated Data:", data); // Debugging log
+    // Format the data for the response
+    const result = formatUserData(users, last14Days, data);
 
-    // Now, we need to make sure that we have data for every day in the last 14 days
-    const result = users.map((user) => {
-      const userData = last14Days.map((day) => {
-        // Find the data for the user and day, or default to 0 points
-        const dayData = data.find(
-          (d) => d._id.user === user && d._id.day === day
-        );
-        return {
-          day,
-          points: dayData ? dayData.totalPoints : 0, // If no data, set points to 0
-        };
-      });
-      return { user, data: userData };
-    });
-
-    res.status(200).json(result);
+    // Send the final data in the response
+    // console.log("Data to be sent:", JSON.stringify(result, null, 2));
+    return res.status(200).json(result);
   } catch (error) {
-    console.error(
-      `Error while fetching room data in dataController.js: ${error}`
-    );
-    res.status(500).json({
-      msg: "Error while fetching room data in dataController.js",
-      error: error.message,
-    });
+    console.error("Error fetching room data:", error);
+    return res
+      .status(500)
+      .json({ msg: "Error fetching room data", error: error.message });
   }
+};
+
+// Function to aggregate user activity for the last 14 days
+const aggregateUserActivity = async (users, last14Days) => {
+  return HistoryModel.aggregate([
+    {
+      $match: {
+        user: { $in: users }, // Match by usernames
+        createdAt: { $gte: new Date(last14Days[0]) }, // Match activities from the last 14 days
+      },
+    },
+    {
+      $project: {
+        user: 1,
+        day: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        tagCount: { $size: "$tag" },
+      },
+    },
+    {
+      $addFields: {
+        points: { $multiply: ["$tagCount", 2] },
+      },
+    },
+    {
+      $group: {
+        _id: { user: "$user", day: "$day" },
+        totalPoints: { $sum: "$points" },
+      },
+    },
+    { $sort: { "_id.user": 1, "_id.day": 1 } },
+  ]);
+};
+
+// Function to format the aggregated data for the response
+const formatUserData = (users, last14Days, data) => {
+  // Create a map of aggregated data for fast lookup
+  const dataMap = data.reduce((map, d) => {
+    const key = `${d._id.user}_${d._id.day}`;
+    map[key] = d.totalPoints;
+    return map;
+  }, {});
+
+  const formattedData = {
+    dates: last14Days,
+    users: users.map((user) => {
+      const points = last14Days.map((day) => {
+        const key = `${user}_${day}`;
+        return dataMap[key] || 0;
+      });
+      return { user, points };
+    }),
+  };
+  return formattedData;
 };
 
 export { getAllData };

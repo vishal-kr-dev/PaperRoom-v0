@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import useAuthStore from "../zustandStore/authStore";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LogForm = ({ setIsModalOpen }) => {
   const baseURL = import.meta.env.VITE_BACK_URL;
@@ -28,11 +30,11 @@ const LogForm = ({ setIsModalOpen }) => {
       // console.log(response.status);
       if (response.status == 200) {
         setIsModalOpen(false);
-        alert("Submitted successfully");
+        toast.success("Submitted successfully");
       }
     } catch (error) {
       console.log("Error while submitting log details:", error);
-      alert("Error while submitting log details");
+      toast.error("Error while submitting log details");
     }
   };
 

@@ -24,3 +24,4 @@ server/.env
 *.sln
 *.sw?
 todo.txt
+package-lock.json
