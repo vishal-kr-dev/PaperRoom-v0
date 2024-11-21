@@ -14,7 +14,6 @@ const Home = () => {
   const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
-  // For modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const baseURL = import.meta.env.VITE_BACK_URL;
@@ -112,8 +111,8 @@ const Home = () => {
 
           {/* User Cards Section */}
           <section className="flex w-full gap-4 p-4 overflow-x-auto bg-blue-50 shadow-inner rounded-lg">
-            {users.map((user) => {
-              return <UserCard key={user.id} {...user} />;
+            {data.users.map((user, index) => {
+              return <UserCard key={index} user={user.user} />;
             })}
           </section>
         </>
