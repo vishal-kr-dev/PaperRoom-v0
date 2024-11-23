@@ -63,26 +63,20 @@ const Home = () => {
         <>
           {/* Navigation Bar */}
           <nav className="flex items-center justify-between px-8 h-16  shadow-lg">
-            <h1 className="text-3xl font-extrabold tracking-tight">
-              PaperRoom
-            </h1>
+            <img src="logo.png" className="w-56" alt="" />
 
             {/* + button */}
-            <div className="flex-1 flex justify-center">
-              <button
-                className="flex items-center justify-center w-32 h-12 border-2 border-white text-2xl font-bold  hover:text-green-500 transition duration-300"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <Plus />
-              </button>
-            </div>
+            <button
+              className="flex items-center justify-center w-32 h-12 border-2 border-white text-2xl font-bold  hover:text-green-500 transition duration-300"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Plus />
+            </button>
 
-            <div className="flex items-center gap-4">
-              {/* Profile Button */}
-              <button className="text-lg px-3 py-1 rounded-lg text-black border-2 border-black font-semibold hover:bg-gray-100 hover:scale-105 transition-transform duration-200">
-                Profile
-              </button>
-            </div>
+            {/* Profile Button */}
+            <button className="text-lg px-3 py-1 rounded-lg text-black border-2 border-black font-semibold hover:bg-gray-100 hover:scale-105 transition-transform duration-200">
+              Profile
+            </button>
           </nav>
 
           {/* Modal for Login Form */}
