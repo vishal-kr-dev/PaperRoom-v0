@@ -3,8 +3,8 @@ import UserModel from "../models/UserSchema.js";
 
 const createHistoryEntry = async (req, res) => {
   try {
-    const { username, description, tag } = req.body;
-    console.log(`Data from frontend User: ${username} Tag: ${tag} Description: ${description}`);
+    const { username, tag } = req.body;
+    console.log(`Data from frontend User: ${username}, Tag: ${tag}`);
 
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
@@ -12,24 +12,18 @@ const createHistoryEntry = async (req, res) => {
 
     // Check if the user already has a record for today
     let history = await HistoryModel.findOne({
-      username,
+      user: username,
       createdAt: { $gte: startOfDay, $lte: endOfDay },
     });
 
     if (history) {
-      const updatedTags = [...new Set([...history.tag, ...tag])];
-
       await HistoryModel.updateOne(
         { _id: history._id },
-        {
-          $set: { description },
-          $addToSet: { tag: { $each: tag } },
-        }
+        { $addToSet: { tag: { $each: tag } } }
       );
     } else {
       await HistoryModel.create({
         user: username,
-        description,
         tag: tag,
       });
     }
@@ -45,18 +39,18 @@ const createHistoryEntry = async (req, res) => {
 const getHistoryEntries = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId);
 
-    const historyEntries = await HistoryModel.find({ user: userId }).sort({
-      createdAt: -1,
-    });
-    // .populate("user", "username roomId");
+    const historyEntries = await HistoryModel.find({ user: userId })
+      .select("user tag createdAt -_id")
+      .sort({
+        createdAt: -1,
+      });
 
     if (historyEntries.length === 0) {
       return res.status(404).json({ message: "No history entries found" });
     }
 
-    console.log("Fetched history entries:", historyEntries);
+    // console.log("Fetched history entries:", historyEntries);
     res.status(200).json({
       message: "History entries fetched successfully",
       historyEntries,

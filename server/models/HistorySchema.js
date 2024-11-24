@@ -7,9 +7,7 @@ const HistorySchema = new mongoose.Schema(
       ref: "Users",
       required: true,
     },
-    description: String,
     tag: [{ type: String, required: true }],
-    // duration: Number,
   },
   {
     timestamps: true,
