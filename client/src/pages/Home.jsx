@@ -48,18 +48,18 @@ const Home = () => {
   }, [isModalOpen]);
 
   return (
-    <main className="flex flex-col min-h-screen bg-gray-50">
+    <main className="flex flex-col min-h-screen bg-primary-bg">
       {loading ? (
         <div>Loading...</div>
       ) : (
         <>
           {/* Navigation Bar */}
-          <nav className="flex items-center justify-between px-8 h-16  shadow-lg">
+          <nav className="flex items-center justify-between px-8 h-16  shadow-lg border-b border-hover">
             <img src="logo.png" className="w-56" alt="PAPER ROOM" />
 
             {/* + button */}
             <button
-              className="flex items-center justify-center w-32 h-12 border-2 border-white text-2xl font-bold  hover:text-green-500 transition duration-300"
+              className="flex items-center justify-center w-32 h-12 border-2 border-white rounded-lg text-white text-2xl font-bold  hover:text-green-500 transition duration-300"
               onClick={() => setIsModalOpen(true)}
             >
               <Plus />
@@ -67,7 +67,7 @@ const Home = () => {
 
             {/* Profile Button */}
             <Link to={"/user/demo"}>
-              <button className="text-lg px-3 py-1 rounded-lg text-black border-2 border-black font-semibold hover:bg-gray-100 hover:scale-105 transition-transform duration-200">
+              <button className="text-lg px-3 py-1 rounded-lg text-white border-2 font-semibold hover:bg-accent hover:scale-105 transition-transform duration-200">
                 Profile
               </button>
             </Link>
@@ -79,26 +79,20 @@ const Home = () => {
             <LogForm setIsModalOpen={setIsModalOpen} />
           </Modal>
 
-          {/* Main Content Area */}
+          {/* Graph Area */}
           <section className="flex flex-col lg:flex-row gap-4 p-6">
-            {/* Left Section (Graphs, Content, etc.) */}
-            <section className="lg:w-3/4 bg-white shadow-lg rounded-lg p-6 flex-grow">
-              {/* Placeholder for future graphs/content */}
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                <LineGraph data={data} />
-              </h2>
-              {/* Add your graph component here */}
+            <section className="lg:w-3/4 bg-secondary-bg shadow-lg rounded-lg p-6 flex-grow">
+              <LineGraph data={data} />
             </section>
 
-            {/* Right Section (Sidebar for additional content) */}
-            <section className="lg:w-1/4 bg-white shadow-lg rounded-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Sidebar</h2>
-              {/* Sidebar content */}
+            {/* Right Section */}
+            <section className="lg:w-1/4 bg-secondary-bg text-white shadow-lg rounded-lg p-6">
+              <h2 className="text-xl font-bold mb-4">Sidebar</h2>
             </section>
           </section>
 
           {/* User Cards Section */}
-          <section className="flex w-full gap-4 p-4 overflow-x-auto bg-blue-50 shadow-inner rounded-lg">
+          <section className="flex w-full gap-4 p-4 overflow-x-auto bg-secondary-bg shadow-inner rounded-lg">
             {data.users.map((user, index) => {
               return <UserCard key={index} user={user.user} />;
             })}

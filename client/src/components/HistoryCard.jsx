@@ -15,7 +15,7 @@ const HistoryCard = ({ createdAt, tag }) => {
         {tag.map((t, index) => (
           <p
             key={index}
-            className="text-white font-semibold px-2 py-1 mx-0.5 rounded-lg"
+            className="text-white font-semibold px-2 py-1 m-0.5 rounded-lg"
             style={{
               backgroundColor: getRandomRGBColor(),
               wordBreak: "break-word", // Prevent long text from breaking the layout

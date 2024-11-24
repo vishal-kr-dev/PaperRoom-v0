@@ -23,11 +23,24 @@ ChartJS.register(
 
 const LineGraph = (data) => {
   const options = {
-    responsive: true,
+    responsive: true, // Make the chart responsive
     plugins: {
-      title: {
-        display: false,
-        text: "Points Chart",
+      legend: {
+        labels: {
+          color: "white", // Set the color of legend text to white
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "white",
+        },
+      },
+      y: {
+        ticks: {
+          color: "white",
+        },
       },
     },
   };

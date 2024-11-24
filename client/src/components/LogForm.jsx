@@ -19,15 +19,13 @@ const LogForm = ({ setIsModalOpen }) => {
       const tag = Object.keys(data).filter((key) => data[key] === true);
       const response = await axios.post(
         `${baseURL}/history`,
-        { tag, description: data.description },
+        { tag },
         {
           headers: {
             Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
           },
         }
       );
-      // console.log("From logFrom.jsx", tag, data.description);
-      // console.log(response.status);
       if (response.status == 200) {
         setIsModalOpen(false);
         toast.success("Submitted successfully");
@@ -95,20 +93,20 @@ const LogForm = ({ setIsModalOpen }) => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <textarea
             type="text"
             id="description"
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
+            className=" w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
             placeholder="Write the description"
             {...register("description")}
           />
-        </div>
+        </div> */}
 
         <div className="flex justify-center">
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-300"
           >
             Submit
           </button>
