@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserCard from "../components/UserCard";
 import useAuthStore from "../zustandStore/authStore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
 import LogForm from "../components/LogForm";
 import { Plus } from "lucide-react";
@@ -47,14 +47,6 @@ const Home = () => {
     }
   }, [isModalOpen]);
 
-  const users = [
-    {
-      name: "Unknown",
-      id: 1,
-      image: "https://placehold.co/600x400/000000/FFFFFF.png",
-    },
-  ];
-
   return (
     <main className="flex flex-col min-h-screen bg-gray-50">
       {loading ? (
@@ -63,7 +55,7 @@ const Home = () => {
         <>
           {/* Navigation Bar */}
           <nav className="flex items-center justify-between px-8 h-16  shadow-lg">
-            <img src="logo.png" className="w-56" alt="" />
+            <img src="logo.png" className="w-56" alt="PAPER ROOM" />
 
             {/* + button */}
             <button
@@ -74,9 +66,11 @@ const Home = () => {
             </button>
 
             {/* Profile Button */}
-            <button className="text-lg px-3 py-1 rounded-lg text-black border-2 border-black font-semibold hover:bg-gray-100 hover:scale-105 transition-transform duration-200">
-              Profile
-            </button>
+            <Link to={"/user/demo"}>
+              <button className="text-lg px-3 py-1 rounded-lg text-black border-2 border-black font-semibold hover:bg-gray-100 hover:scale-105 transition-transform duration-200">
+                Profile
+              </button>
+            </Link>
           </nav>
 
           {/* Modal for Login Form */}

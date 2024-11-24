@@ -1,33 +1,18 @@
 -implement jwt
-maintain unique description for each session
-host on vercel
-log form (points)
-jwt verification at startup and expiration
-charts
-sessions schema 
+	maintain unique description for each session
+-host on vercel
+-log form (points)
+-jwt verification at startup and expiration
+-charts
+	sessions schema 
 rank list
-landing page
 make different logForm for different rooms possible(user defined logs)
-assigning roomId(Schema {
-    active: user login
-    roomId
-    user[ 
-
-    ]
-})/ Inactive room deletion
 Goals page
+Inactive room deletion
 profile page history
-extension(timer maybe)
-
+landing page
 animations
-
 implement password hashing
-adding point system
-admin pannel
-
-// Array of seven days one month or total array.length = 9
-
-room schema contains {
-    user
-    points []
-}
+admin panel
+extension
+calendar shaped history

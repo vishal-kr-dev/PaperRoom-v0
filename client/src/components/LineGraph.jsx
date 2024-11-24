@@ -32,8 +32,6 @@ const LineGraph = (data) => {
     },
   };
 
-  console.log(data.data.dates);
-
   const graphData = {
     labels: data.data.dates,
     datasets: data.data.users.map((item, index) => {

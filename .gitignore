@@ -25,3 +25,4 @@ server/.env
 *.sw?
 todo.txt
 package-lock.json
+todo.txt
