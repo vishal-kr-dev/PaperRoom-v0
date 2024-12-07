@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { PanelRightClose, PanelRightOpen, User, Target } from "lucide-react";
 import Profile from "./Profile";
 import Goals from "./Goals";
-import Navbar from "./Navbar";
 
 const Sidebar = ({ setActiveTab }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +21,6 @@ const Sidebar = ({ setActiveTab }) => {
 
   return (
     <main>
-      <Navbar />
       <div className="flex h-screen fixed bg-secondary-bg text-white border-r">
         <div
           className={`${

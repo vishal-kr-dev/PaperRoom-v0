@@ -4,10 +4,12 @@ import LoginForm from "./components/Login";
 import SignUpForm from "./components/Signup";
 import Sidebar from "./components/Sidebar";
 import Profile from "./components/Profile";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <BrowserRouter>
+    <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />

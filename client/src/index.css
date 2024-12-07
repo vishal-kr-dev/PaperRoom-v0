@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    overflow: hidden;
+html{
+    scrollbar-width: none;
 }

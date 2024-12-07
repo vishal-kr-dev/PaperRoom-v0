@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import UserCard from "../components/UserCard";
 import useAuthStore from "../zustandStore/authStore";
 import LineGraph from "../components/LineGraph";
-import Navbar from "../components/Navbar"
 
 const Home = () => {
   const { isAuthenticated } = useAuthStore();
@@ -44,7 +43,6 @@ const Home = () => {
 
   return (
     <main className="flex flex-col min-h-screen bg-primary-bg">
-      <Navbar />
       {loading ? (
         <div>Loading...</div>
       ) : (
