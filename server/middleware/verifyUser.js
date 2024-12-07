@@ -15,9 +15,14 @@ const verifyUser = async (req, res, next) => {
       return res.status(401).json({ msg: "Invalid token" });
     }
 
-    const user = await UserModel.findOne({ username: decoded.username }).select(
-      "username"
+    const user = await UserModel.findOne({ username: decoded.username })
+    .select(
+      "-password"
     ); // For searching everything other than password write -password
+
+    if (!user || user.username != decoded.username) {
+      return res.status(404).json({ msg: "Invalid token" });
+    }
 
     req.body.username = decoded.username;
     console.log("Verified user: ", decoded.username);

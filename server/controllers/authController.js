@@ -1,6 +1,6 @@
 import UserModel from "../models/UserSchema.js";
-import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 import RoomModel from "../models/RoomSchema.js";
 
 dotenv.config();
@@ -26,22 +26,20 @@ const register = async (req, res) => {
       roomId,
     });
 
-    const roomExist = await RoomModel.findOne({roomId})
-    if(roomExist){
-      roomExist.users.push(username)
-      await roomExist.save()
-      console.log(`Added user: ${username}`)
-
-    }else{
+    const roomExist = await RoomModel.findOne({ roomId });
+    if (roomExist) {
+      roomExist.users.push(username);
+      await roomExist.save();
+      console.log(`Added user: ${username}`);
+    } else {
       const newRoom = new RoomModel({
         roomId,
-        users: [username]
-      })
+        users: [username],
+      });
 
-      await newRoom.save()
-      console.log("New room created")
+      await newRoom.save();
+      console.log("New room created");
     }
-
 
     await newUser.save();
     return res.status(201).json({ msg: "User registered successfully" });
@@ -54,12 +52,12 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log(`Id: ${username} password: ${password}`)
+    console.log(`Username: ${username}`);
 
     // Check if user exists
     const user = await UserModel.findOne({ username });
     if (!user || password !== user.password) {
-      return res.status(401).json({ msg: "Username or password incorrect" });
+      return res.status(401).json({ msg: "Invalid username or password" });
     }
 
     // Generate JWT token
