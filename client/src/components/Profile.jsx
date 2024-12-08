@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import HistoryCard from "./HistoryCard";
 import { useParams } from "react-router-dom";
-import dummy from "../assets/profile.webp"
+
+import HistoryCard from "./HistoryCard";
+import dummy from "../assets/profile.webp";
+import useDataStore from "../zustandStore/dataStore";
 
 const Profile = () => {
   const baseURL = import.meta.env.VITE_BACK_URL;
   const [data, setData] = useState([]);
 
   const { user } = useParams();
+  const { roomId } = useDataStore((state) => state.user);
 
   const fetchData = async () => {
     try {
@@ -29,15 +32,14 @@ const Profile = () => {
       {/* Profile section */}
       <section className="flex items-center justify-center text-white font-semibold text-2xl">
         <div>
-
-        <div className="p-2">
-          <img src={dummy} alt="" className="size-48 border " />
-        </div>
-        <div className="p-4">
-          <p>Username: {user}</p>
-          <p>RoomId: </p>
-          <p>Socials: <a href="#">LinkedIn</a></p>
-        </div>
+          <div className="p-2">
+            <img src={dummy} alt="" className="size-48 border rounded-full" />
+          </div>
+          <div className="p-2">
+            <p>Username: {user}</p>
+            <p>RoomId: {roomId}</p>
+            {/* <p>Socials</p> */}
+          </div>
         </div>
       </section>
 

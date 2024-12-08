@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {Toaster} from 'react-hot-toast'
+
 import Home from "./pages/Home";
 import LoginForm from "./components/Login";
 import SignUpForm from "./components/Signup";
@@ -9,6 +11,7 @@ import Navbar from "./components/Navbar";
 function App() {
   return (
     <BrowserRouter>
+    <Toaster />
     <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

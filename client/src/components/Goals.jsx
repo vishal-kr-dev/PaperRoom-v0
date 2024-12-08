@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const Goals = () => {
   const baseURL = import.meta.env.VITE_BACK_URL;
@@ -31,16 +32,15 @@ const Goals = () => {
           Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
         },
       });
-      // console.log("Response in return for sending the data ", response.data, response.status);
 
       if (response.status === 201) {
-        console.log("Saved successfully");
+        toast.success("Saved successfully");
         setDescription("");
         setDeadline("");
         setSubtasks([]);
         setIsTaskCompleted(false);
       } else {
-        console.log("Error while submitting goals");
+        toast.error("Error: Couldn't save");
       }
     } catch (error) {
       console.log("Error while saving goals ", error);
@@ -83,7 +83,7 @@ const Goals = () => {
 
   return (
     <main className="w-full min-h-screen p-2 bg-primary-bg">
-      <section className="w-full h-full bg-secondary-bg rounded-xl p-4">
+      <section className="w-ful h-auto bg-secondary-bg rounded-xl p-4">
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           {/* Main task description and deadline */}
           <div className="flex w-full gap-4">
@@ -100,12 +100,11 @@ const Goals = () => {
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
               className="px-4 py-2 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
             />
             <input
               type="submit"
               value="Submit"
-              className="bg-blue-500 text-white px-3 py-2 font-semibold rounded-lg cursor-pointer hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-orange-500 text-white px-3 py-2 font-bold rounded-lg cursor-pointer hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -134,7 +133,7 @@ const Goals = () => {
                 <button
                   type="button"
                   onClick={handleAddSubtask}
-                  className="bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="bg-orange-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
                   Add Subtask
                 </button>
@@ -163,6 +162,16 @@ const Goals = () => {
             </ul>
           </div>
         </form>
+      </section>
+      <section className="w-full h-auto bg-secondary-bg rounded-xl p-4 mt-2">
+        <p className="flex items-center justify-center text-white font-bold">
+          Active
+        </p>
+      </section>
+      <section className="w-full h-auto bg-secondary-bg rounded-xl p-4 mt-2">
+        <p className="flex items-center justify-center text-white font-bold">
+          Completed
+        </p>
       </section>
 
       {/* Visual analysis placeholder

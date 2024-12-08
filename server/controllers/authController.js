@@ -74,4 +74,13 @@ const login = async (req, res) => {
   }
 };
 
-export { login, register };
+const getDetails = (req, res) => {
+  try {
+    const {username, roomId, goals} = req.user
+    res.status(200).json({msg: "User details", username, roomId, goals })
+  } catch (error) {
+    console.log("Error while getting user details ", error)
+  }
+};
+
+export { login, register, getDetails };

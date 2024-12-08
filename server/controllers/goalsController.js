@@ -15,15 +15,16 @@ const saveGoals = async (req, res) => {
       isCompleted,
     };
 
-    req.user.goals.push(newGoal)
+    req.user.goals.push(newGoal);
 
     await req.user.save();
 
-    res.status(201).json({msg: 'Goal added successfully'})
+    res.status(201).json({ msg: "Goal added successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({msg: 'Internal server error', error})
+    res.status(500).json({ msg: "Internal server error", error });
   }
 };
 
-export default saveGoals;
+
+export {saveGoals} ;

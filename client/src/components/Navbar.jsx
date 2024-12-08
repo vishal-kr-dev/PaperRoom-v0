@@ -6,9 +6,11 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Modal from "../components/Modal";
 import LogForm from "../components/LogForm";
 import logo from "../assets/logo.png";
+import useDataStore from "../zustandStore/dataStore";
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { username } = useDataStore((state) => state.user);
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthRoute =
@@ -38,7 +40,7 @@ const Navbar = () => {
           {location.pathname === "/" ? (
             <button
               className="flex items-center justify-center gap-1 w-24 h-10 text-lg rounded-lg text-white border-2 font-semibold hover:bg-accent hover:scale-105 transition-transform duration-200"
-              onClick={() => navigate("/user/demo")}
+              onClick={() => navigate(`/user/${username}`)}
             >
               <CircleUserRound />
               Profile
