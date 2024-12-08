@@ -1,5 +1,33 @@
 import mongoose from "mongoose";
 
+const GoalsSchema = new mongoose.Schema({
+  description: {
+    type: String,
+    required: true,
+  },
+  deadline: {
+    type: Date,
+    required: false,
+  },
+  subtasks: [
+    {
+      description: {
+        type: String,
+        required: true,
+      },
+      isCompleted: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
+  isCompleted: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+});
+
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -14,7 +42,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  goals: [GoalsSchema],
 });
 
-const UserModel = mongoose.model("Users", UserSchema);
+const UserModel = mongoose.model("User", UserSchema);
+
 export default UserModel;

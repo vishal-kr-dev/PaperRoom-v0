@@ -1,10 +1,12 @@
 import express from "express";
 import dotev from "dotenv";
 import cors from "cors";
+
 import connectDB from "./config/db.js";
 import HistoryRoute from "./routes/HistoryRoute.js";
 import authRouter from "./routes/authRouter.js";
 import dataRouter from "./routes/dataRouter.js";
+import goalsRouter from "./routes/goalsRouter.js"
 
 // Load variable from .env file
 dotev.config();
@@ -25,6 +27,7 @@ app.use(
 app.use("/history", HistoryRoute);
 app.use("/user", authRouter);
 app.use("/home", dataRouter);
+app.use("/goals", goalsRouter)
 app.get("/", (req, res) => {
   res.status(200).json({ msg: "The server is up and running" });
 });

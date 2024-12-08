@@ -24,6 +24,7 @@ const verifyUser = async (req, res, next) => {
       return res.status(404).json({ msg: "Invalid token" });
     }
 
+    req.user = user
     req.body.username = decoded.username;
     console.log("Verified user: ", decoded.username);
 

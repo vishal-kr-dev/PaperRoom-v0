@@ -10,7 +10,7 @@ export default {
         "primary-bg": "#121212",
         "secondary-bg": "#1d1d1d",
         "hover": "#353535",
-        "accent": "#bb86fc",
+        "accent": "#6200ed",
         "muted-gray": "#2d2d2d",
       },
     },
