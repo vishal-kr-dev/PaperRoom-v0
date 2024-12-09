@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
+import toast from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
+
+import useDataStore from "../zustandStore/dataStore";
 
 const LogForm = ({ setIsModalOpen }) => {
   const baseURL = import.meta.env.VITE_BACK_URL;
-  
+
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split("T")[0];
 
@@ -38,7 +40,39 @@ const LogForm = ({ setIsModalOpen }) => {
     }
   };
 
-  const data = ["dsa", "dev"]
+  const { goals } = useDataStore((state) => state.user);
+
+  const tasks = (goals) => {
+    const taskWithSubtask = goals.filter(
+      (g) => !g.isCompleted && g.subtasks.length > 0
+    );
+    const taskWithoutSubtasks = goals.filter(
+      (g) => !g.isCompleted && g.subtasks.length === 0
+    );
+
+    const subTasks = taskWithSubtask.flatMap((t) => t.subtasks);
+
+    const res = [...taskWithoutSubtasks, ...subTasks];
+    return res;
+  };
+
+  const data = tasks(goals)
+  console.log(tasks(goals))
+
+  const formatDeadline = (deadline) => {
+    if (!deadline) return null;
+
+    const deadlineDate = new Date(deadline);
+    const currentDate = new Date();
+    const timeDiff = deadlineDate.getTime() - currentDate.getTime();
+
+    const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    if (daysRemaining === 0) return "0 days left";
+    if (daysRemaining < 0) return `${Math.abs(daysRemaining)} days ago`;
+
+    return `${daysRemaining} days left`;
+  };
 
   return (
     <div>
@@ -54,16 +88,15 @@ const LogForm = ({ setIsModalOpen }) => {
                 <input
                   id={index}
                   type="checkbox"
-                  {...register(`${item}`)}
+                  {...register(`${item.description}`)}
                   className="size-4"
                 />
-                <label
-                  htmlFor={index}
-                  className=""
-                  title={item}
-                >
-                  {item.length > 45 ? `${item.slice(0, 45)}...`: item }
+                <label htmlFor={index} className="" title={item.description}>
+                  {item.length > 45
+                    ? `${item.slice(0, 45)}...`
+                    : item.description}
                 </label>
+                <p className="text-gray-500">{formatDeadline(item.deadline)}</p>
               </div>
             );
           })}

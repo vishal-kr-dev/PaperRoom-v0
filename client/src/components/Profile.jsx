@@ -46,11 +46,15 @@ const Profile = () => {
       {/* History section */}
       <section className="p-2">
         <h1 className="text-2xl font-bold text-center text-white">History</h1>
+        {data.length === 0 ? (
+          <span className="flex justify-center items-center p-4 text-red-600 font-semibold">No history yet</span>
+        ): (
         <div>
           {data.map((history, index) => (
             <HistoryCard key={index} {...history} />
           ))}
         </div>
+        )}
       </section>
     </main>
   );

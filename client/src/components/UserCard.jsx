@@ -5,7 +5,7 @@ const UserCard = (prop) => {
   return (
     
     <Link to={`/profile/${prop.user}`}>
-        <div className="flex flex-col items-center justify-center w-36 h-40 bg-primary-bg text-white p-3 rounded-3xl drop-shadow-2xl hover:scale-110 hover:-translate-y-3 transition-transform duration-200">
+        <div className="flex flex-col items-center justify-center w-36 h-40 bg-primary-bg text-white p-3 rounded-3xl drop-shadow-2xl hover:scale-110 hover:-translate-y-3 transition-transform duration-200 relative x-10">
           <img
             className="size-20 rounded-full object-cover overflow-hidden shadow-2xl"
             src={profile}
