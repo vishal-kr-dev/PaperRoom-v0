@@ -25,6 +25,28 @@ const saveGoals = async (req, res) => {
   }
 };
 
+const updateGoals = async (req, res) => {
+  const { goalId } = req.params;
+  const user = req.user;
+  const { goals } = req.user;
+
+  try {
+    const goal = user.goals.id(goalId);
+    if (!goal) {
+      console.log("Goal not found");
+      return res.status(404).json({ message: "Goal not found" });
+    }
+
+    goal.isCompleted = !goal.isCompleted;
+    await user.save();
+  
+    res.status(200).json("Goal successfully updated and saved");
+  } catch (error) {
+    console.error("Error updating goal:", error);
+    res.status(500).json({ message: "Error updating goal" });
+  }
+};
+
 
 const deleteGoal = async (req, res) => {
   const user = req.user;
@@ -48,4 +70,4 @@ const deleteGoal = async (req, res) => {
   }
 };
 
-export { saveGoals, deleteGoal };
+export { saveGoals, updateGoals, deleteGoal };

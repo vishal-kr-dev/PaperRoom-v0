@@ -1,5 +1,5 @@
-import axios, { isCancel } from "axios";
 import React, { useState } from "react";
+import axios from "axios";
 import toast from "react-hot-toast";
 
 import useDataStore from "../zustandStore/dataStore";
@@ -9,7 +9,6 @@ const Goals = () => {
 
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
-  // const [type, setType] = useState("Once");
   const [subtasks, setSubtasks] = useState([]);
   const [newSubtask, setNewSubtask] = useState("");
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
@@ -60,35 +59,40 @@ const Goals = () => {
     }
   };
 
-  // Handle subtask completion toggle
-  const toggleSubtaskCompletion = (gIndex, stIndex) => {
-    const updatedGoals = [...goals];
-    const updatedSubtasks = [...updatedGoals[gIndex].subtask];
-    updatedSubtasks[stIndex].isCompleted =
-      !updatedSubtasks[stIndex].isCompleted;
+  const toggleSubtaskCompletion = (goalIndex, subtaskIndex) => {
+    const targetGoal = { ...goals[goalIndex] };
+    const subtask = { ...targetGoal.subtasks[subtaskIndex] };
 
-    updatedGoals[gIndex].subtask = updatedSubtasks;
-    setUserData({ ...user, goals: updatedGoals });
+    subtask.isCompleted = !subtask.isCompleted;
 
-    updateSubtask(
-      updatedGoals[goalIndex]._id,
-      updatedSubtasks[subtaskIndex]._id,
-      {
-        isCompleted: updatedSubtasks[subtaskIndex].isCompleted,
-      }
+    targetGoal.subtasks = targetGoal.subtasks.map((task, index) =>
+      index === subtaskIndex ? subtask : task
     );
+
+    const updatedGoals = goals.map((goal, index) =>
+      index === goalIndex ? targetGoal : goal
+    );
+
+    setUserData({
+      ...user,
+      goals: updatedGoals,
+    });
+
+    updateSubtask(targetGoal._id, subtask._id, {
+      isCompleted: subtask.isCompleted,
+    });
   };
 
-  const updateGoalCompletion = (goalId, isCompleted) => {
-    const updatedData = { isCompleted };
-    updateGoal(goalId, updatedData);
-  };
 
-  const updateGoal = async (goalId, updatedData) => {
+  // working
+  const toggleGoalCompletion = async (goalIndex) => {
+    const targetGoal = { ...goals[goalIndex] };
+    targetGoal.isCompleted = !targetGoal.isCompleted;
+
     try {
       const response = await axios.put(
-        `${baseURL}/goals/update/${goalId}`,
-        updatedData,
+        `${baseURL}/goals/update/${targetGoal._id}`,
+        targetGoal,
         {
           headers: {
             Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
@@ -97,20 +101,19 @@ const Goals = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Updated");
-        const updatedGoals = goals.map((goal) =>
-          goal._id === goalId ? { ...goal, ...updatedData } : goal
+        const updatedGoals = goals.map((goal, index) =>
+          index === goalIndex ? targetGoal : goal
         );
         setUserData({ ...user, goals: updatedGoals });
-      } else {
-        toast.error("Error: Couldn't update goal");
+        toast.success("Updated successfully");
       }
     } catch (error) {
-      toast.error("Error while updating goal");
+      toast.error("Failed to update goal. Please try again.");
       console.log("Error while updating goal: ", error);
     }
   };
-
+  
+  // working
   const deleteGoal = async (goalId) => {
     try {
       const response = await axios.delete(`${baseURL}/goals/delete/${goalId}`, {
@@ -265,7 +268,7 @@ const Goals = () => {
                 className="size-4 mr-2"
                 checked={g.isCompleted}
                 id={g._id}
-                onChange={() => toggleSubtaskCompletion(gIndex)}
+                onChange={() => toggleGoalCompletion(gIndex)}
               />
               <label className="text-white" htmlFor={g._id}>
                 {g.description}
