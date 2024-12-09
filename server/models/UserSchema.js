@@ -5,6 +5,10 @@ const GoalsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // type: {
+  //   type: String,
+  //   required: true
+  // },
   deadline: {
     type: Date,
     required: false,
