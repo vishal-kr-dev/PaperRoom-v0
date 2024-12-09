@@ -59,32 +59,6 @@ const Goals = () => {
     }
   };
 
-  const toggleSubtaskCompletion = (goalIndex, subtaskIndex) => {
-    const targetGoal = { ...goals[goalIndex] };
-    const subtask = { ...targetGoal.subtasks[subtaskIndex] };
-
-    subtask.isCompleted = !subtask.isCompleted;
-
-    targetGoal.subtasks = targetGoal.subtasks.map((task, index) =>
-      index === subtaskIndex ? subtask : task
-    );
-
-    const updatedGoals = goals.map((goal, index) =>
-      index === goalIndex ? targetGoal : goal
-    );
-
-    setUserData({
-      ...user,
-      goals: updatedGoals,
-    });
-
-    updateSubtask(targetGoal._id, subtask._id, {
-      isCompleted: subtask.isCompleted,
-    });
-  };
-
-
-  // working
   const toggleGoalCompletion = async (goalIndex) => {
     const targetGoal = { ...goals[goalIndex] };
     targetGoal.isCompleted = !targetGoal.isCompleted;
@@ -112,8 +86,40 @@ const Goals = () => {
       console.log("Error while updating goal: ", error);
     }
   };
-  
-  // working
+
+  const toggleSubtaskCompletion = async (goalIndex, subtaskIndex) => {
+    const targetGoal = { ...goals[goalIndex] };
+    const targetSubtask = { ...targetGoal.subtasks[subtaskIndex] };
+
+    targetSubtask.isCompleted = !targetSubtask.isCompleted;
+    targetGoal.subtasks = targetGoal.subtasks.map((subtask, index) =>
+      index === subtaskIndex ? targetSubtask : subtask
+    );
+
+    try {
+      const response = await axios.put(
+        `${baseURL}/goals/update-subtask/${targetGoal._id}/${targetSubtask._id}`,
+        targetSubtask,
+        {
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedGoals = goals.map((goal, index) =>
+          index === goalIndex ? targetGoal : goal
+        );
+        setUserData({ ...user, goals: updatedGoals });
+        toast.success("Updated successfully");
+      }
+    } catch (error) {
+      toast.error("Failed to update goal. Please try again.");
+      console.log("Error while updating goal: ", error);
+    }
+  };
+
   const deleteGoal = async (goalId) => {
     try {
       const response = await axios.delete(`${baseURL}/goals/delete/${goalId}`, {
@@ -133,43 +139,6 @@ const Goals = () => {
     } catch (error) {
       toast.error("Error while deleting goal");
       console.error("Error while deleting goal:", error);
-    }
-  };
-
-  const updateSubtask = async (goalId, subtaskId, updatedData) => {
-    try {
-      const response = await axios.put(
-        `${baseURL}/goals/update-subtask/${goalId}/${subtaskId}`,
-        updatedData,
-        {
-          headers: {
-            Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.success("Subtask updated successfully");
-
-        const updatedGoals = goals.map((goal) =>
-          goal._id === goalId
-            ? {
-                ...goal,
-                subtasks: goal.subtasks.map((subtask) =>
-                  subtask._id === subtaskId
-                    ? { ...subtask, ...updatedData }
-                    : subtask
-                ),
-              }
-            : goal
-        );
-        setUserData({ ...user, goals: updatedGoals });
-      } else {
-        toast.error("Error: Couldn't update subtask");
-      }
-    } catch (error) {
-      toast.error("Error while updating subtask");
-      console.error("Error while updating subtask:", error);
     }
   };
 

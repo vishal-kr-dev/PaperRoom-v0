@@ -34,19 +34,45 @@ const updateGoals = async (req, res) => {
     const goal = user.goals.id(goalId);
     if (!goal) {
       console.log("Goal not found");
-      return res.status(404).json({ message: "Goal not found" });
+      return res.status(404).json({ msg: "Goal not found" });
     }
 
     goal.isCompleted = !goal.isCompleted;
     await user.save();
-  
+
     res.status(200).json("Goal successfully updated and saved");
   } catch (error) {
     console.error("Error updating goal:", error);
-    res.status(500).json({ message: "Error updating goal" });
+    res.status(500).json({ msg: "Error updating goal" });
   }
 };
 
+const updateSubGoal = async (req, res) => {
+  const { goalId, subtaskId } = req.params;
+  const user = req.user;
+
+  try {
+    const goal = user.goals.id(goalId);
+    if (!goal) {
+      console.log("Goal not found");
+      return res.status(404).json({ msg: "Goal not found" });
+    }
+
+    const subtask = goal.subtasks.id(subtaskId);
+    if (!subtask) {
+      console.log("Subtask not found");
+      return res.status(404).json({ msg: "Subtask not found" });
+    }
+
+    subtask.isCompleted = !subtask.isCompleted;
+    await user.save();
+
+    res.status(200).json("SubGoal updated successfully");
+  } catch (error) {
+    console.error("Error updating subGoal:", error);
+    res.status(500).json({ msg: "Error updating subGoal" });
+  }
+};
 
 const deleteGoal = async (req, res) => {
   const user = req.user;
@@ -70,4 +96,4 @@ const deleteGoal = async (req, res) => {
   }
 };
 
-export { saveGoals, updateGoals, deleteGoal };
+export { saveGoals, updateGoals, updateSubGoal, deleteGoal };
