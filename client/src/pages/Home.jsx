@@ -4,9 +4,9 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 import UserCard from "../components/UserCard";
-import useAuthStore from "../zustandStore/authStore";
+import useAuthStore from "../Store/authStore";
 import LineGraph from "../components/LineGraph";
-import useDataStore from "../zustandStore/dataStore";
+import useUserDataStore from "../Store/dataStore";
 
 const Home = () => {
   const { isAuthenticated } = useAuthStore();
@@ -24,7 +24,6 @@ const Home = () => {
           Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
         },
       });
-      console.log("Response data:", response.data);
       setData(response.data);
     } catch (error) {
       console.log(`Error at Home.jsx: ${error}`);
@@ -33,7 +32,7 @@ const Home = () => {
     }
   };
 
-  const setUserData = useDataStore((state) => state.setUserData);
+  const { setUser, setRoomId, setGoals } = useUserDataStore();
 
   const fetchUserData = async (req, res) => {
     try {
@@ -44,9 +43,10 @@ const Home = () => {
       });
 
       if (userData.status === 200) {
-        const {username, roomId, goals} = userData.data
-        setUserData({ username, roomId, goals });
-        // console.log("User data", username, roomId, goals);
+        const { username, roomId, goals } = userData.data;
+        setUser(username);
+        setRoomId(roomId);
+        setGoals(goals);
       }
     } catch (error) {
       console.log("Error while fetching goals: ", error);
@@ -61,7 +61,7 @@ const Home = () => {
     } else {
       navigate("/login");
     }
-  }, []);
+  }, [isAuthenticated, navigate]);
 
   return (
     <main className="flex flex-col min-h-screen bg-primary-bg">

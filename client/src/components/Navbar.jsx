@@ -6,11 +6,11 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Modal from "../components/Modal";
 import LogForm from "../components/LogForm";
 import logo from "../assets/logo.png";
-import useDataStore from "../zustandStore/dataStore";
+import useUserDataStore from "../Store/dataStore";
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { username } = useDataStore((state) => state.user);
+  const { username } = useUserDataStore();
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthRoute =
