@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import useDataStore from "../zustandStore/dataStore";
+import useUserDataStore from "../Store/dataStore";
 
 const Goals = () => {
   const baseURL = import.meta.env.VITE_BACK_URL;
@@ -12,10 +12,7 @@ const Goals = () => {
   const [subtasks, setSubtasks] = useState([]);
   const [newSubtask, setNewSubtask] = useState("");
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
-
-  const { user, setUserData } = useDataStore((state) => state);
-  const goals = user.goals;
-  console.log("Goals", goals);
+  const {goals, setNewGoal, setGoals} = useUserDataStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +20,6 @@ const Goals = () => {
     const formData = {
       description,
       deadline,
-      // type,
       subtasks,
       isCompleted: isTaskCompleted,
     };
@@ -36,6 +32,7 @@ const Goals = () => {
       });
 
       if (response.status === 201) {
+        setNewGoal(response.data.goal)
         toast.success("Saved successfully");
         setDescription("");
         setDeadline("");
@@ -59,68 +56,9 @@ const Goals = () => {
     }
   };
 
-  const toggleGoalCompletion = async (goalIndex) => {
-    const targetGoal = { ...goals[goalIndex] };
-    targetGoal.isCompleted = !targetGoal.isCompleted;
-
-    try {
-      const response = await axios.put(
-        `${baseURL}/goals/update/${targetGoal._id}`,
-        targetGoal,
-        {
-          headers: {
-            Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        const updatedGoals = goals.map((goal, index) =>
-          index === goalIndex ? targetGoal : goal
-        );
-        setUserData({ ...user, goals: updatedGoals });
-        toast.success("Updated successfully");
-      }
-    } catch (error) {
-      toast.error("Failed to update goal. Please try again.");
-      console.log("Error while updating goal: ", error);
-    }
-  };
-
-  const toggleSubtaskCompletion = async (goalIndex, subtaskIndex) => {
-    const targetGoal = { ...goals[goalIndex] };
-    const targetSubtask = { ...targetGoal.subtasks[subtaskIndex] };
-
-    targetSubtask.isCompleted = !targetSubtask.isCompleted;
-    targetGoal.subtasks = targetGoal.subtasks.map((subtask, index) =>
-      index === subtaskIndex ? targetSubtask : subtask
-    );
-
-    try {
-      const response = await axios.put(
-        `${baseURL}/goals/update-subtask/${targetGoal._id}/${targetSubtask._id}`,
-        targetSubtask,
-        {
-          headers: {
-            Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        const updatedGoals = goals.map((goal, index) =>
-          index === goalIndex ? targetGoal : goal
-        );
-        setUserData({ ...user, goals: updatedGoals });
-        toast.success("Updated successfully");
-      }
-    } catch (error) {
-      toast.error("Failed to update goal. Please try again.");
-      console.log("Error while updating goal: ", error);
-    }
-  };
-
   const deleteGoal = async (goalId) => {
+    const loadingToast = toast.loading("Deleting...")
+
     try {
       const response = await axios.delete(`${baseURL}/goals/delete/${goalId}`, {
         headers: {
@@ -129,12 +67,12 @@ const Goals = () => {
       });
 
       if (response.status === 200) {
-        toast.success("Goal deleted successfully");
+        toast.success("Goal deleted successfully", {id: loadingToast});
 
         const updatedGoals = goals.filter((goal) => goal._id !== goalId);
-        setUserData({ ...user, goals: updatedGoals });
+        setGoals(updatedGoals)
       } else {
-        toast.error("Error: Couldn't delete goal");
+        toast.error("Error: Couldn't delete goal", {id: loadingToast});
       }
     } catch (error) {
       toast.error("Error while deleting goal");
@@ -171,15 +109,6 @@ const Goals = () => {
           {/* Subtask */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center space-x-2">
-              {/* <select
-                name="Type"
-                id="Type"
-                onChange={(e) => setType(e.target.value)}
-                className="px-3 py-2 rounded-lg"
-              >
-                <option value="Once">Once</option>
-                <option value="Daily">Daily</option>
-              </select> */}
               <input
                 type="text"
                 placeholder="Add subtask..."
@@ -203,16 +132,11 @@ const Goals = () => {
                   <input
                     type="checkbox"
                     checked={subtask.isCompleted}
-                    onChange={() => toggleSubtaskCompletion(index)}
+                    readOnly
+                    // onChange={() => toggleSubtaskCompletion(index)}
                     className="size-4 text-blue-500 "
                   />
-                  <span
-                    className={`text-white ${
-                      subtask.isCompleted ? "line-through text-gray-300" : ""
-                    }`}
-                  >
-                    {subtask.description}
-                  </span>
+                  <span className="text-white">{subtask.description}</span>
                 </li>
               ))}
             </ul>
@@ -222,64 +146,71 @@ const Goals = () => {
 
       {/* Displaying goals */}
       <section className="">
-        <p className="flex items-center justify-center text-white text-xl font-bold w-full h-auto bg-secondary-bg rounded-lg p-4 my-2">
-          Goals
-        </p>
+        <div className="flex flex-col items-center justify-center text-white text-xl font-bold w-full h-auto bg-secondary-bg rounded-lg p-4 my-2">
+          <p>Goals</p>
+          <p className="text-sm font-normal text-gray-500">
+            (Note: The tasks can only be marked as completed from the main page)
+          </p>
+        </div>
 
         <div className="h-full w-full text-sm">
-          {goals.map((g, gIndex) => (
-            <div
-              key={g._id}
-              className="font-bold bg-secondary-bg rounded-xl p-4 mb-2"
-            >
-              <input
-                type="checkbox"
-                className="size-4 mr-2"
-                checked={g.isCompleted}
-                id={g._id}
-                onChange={() => toggleGoalCompletion(gIndex)}
-              />
-              <label className="text-white" htmlFor={g._id}>
-                {g.description}
-              </label>
-
-              <button
-                onClick={() => deleteGoal(g._id)}
-                className="ml-4 text-red-500 hover:text-red-700"
+          {goals?.length > 0 ? (
+            goals.map((g, gIndex) => (
+              <div
+                key={g._id}
+                className="font-bold bg-secondary-bg rounded-xl p-4 mb-2"
               >
-                Delete Goal
-              </button>
+                <input
+                  type="checkbox"
+                  className="size-4 mr-2"
+                  checked={g.isCompleted}
+                  readOnly
+                />
+                <label
+                  className={` ${
+                    g.isCompleted ? "line-through text-gray-500" : "text-white"
+                  }`}
+                >
+                  {g.description}
+                </label>
+                <button
+                  onClick={() => deleteGoal(g._id)}
+                  className="ml-4 text-red-500 hover:text-red-700"
+                >
+                  Delete Goal
+                </button>
 
-              {g.subtasks.length > 0 && (
-                <ul className="space-y-2 pt-2 pl-6">
-                  {g.subtasks.map((subtask, subtaskIndex) => (
-                    <li
-                      key={subtaskIndex}
-                      className="flex items-center space-x-2"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={subtask.isCompleted}
-                        onChange={() =>
-                          toggleSubtaskCompletion(gIndex, subtaskIndex)
-                        }
-                        className="size-4 text-blue-500 "
-                      />
-                      <span
-                        className={` ${
-                          subtask.isCompleted
-                            ? "line-through text-gray-500"
-                            : "text-white"
-                        }`}
+                {g.subtasks?.length > 0 && (
+                  <ul className="space-y-2 pt-2 pl-6">
+                    {g.subtasks.map((subtask, subtaskIndex) => (
+                      <li
+                        key={subtaskIndex}
+                        className="flex items-center space-x-2"
                       >
-                        {subtask.description}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
+                        <input
+                          type="checkbox"
+                          checked={subtask.isCompleted}
+                          readOnly
+                          className="size-4 text-blue-500"
+                        />
+                        <span
+                          className={` ${
+                            subtask.isCompleted
+                              ? "line-through text-gray-500"
+                              : "text-white"
+                          }`}
+                        >
+                          {subtask.description}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No goals available</p>
+          )}
         </div>
       </section>
       {/* <section className="w-full h-auto bg-secondary-bg rounded-xl p-4 mt-2">

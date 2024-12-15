@@ -2,10 +2,7 @@ import UserModel from "../models/UserSchema.js";
 
 const saveGoals = async (req, res) => {
   const { description, deadline, subtasks, isCompleted } = req.body;
-  const { username } = req.user;
 
-  // console.log("username ", username)
-  // console.log("Goal data form frontend", req.body);
   try {
     const newGoal = {
       description,
@@ -14,11 +11,13 @@ const saveGoals = async (req, res) => {
       isCompleted,
     };
 
-    req.user.goals.push(newGoal);
+    req.user.goals.unshift(newGoal);
 
     await req.user.save();
 
-    res.status(201).json({ msg: "Goal added successfully" });
+    const savedGoal = req.user.goals[0]
+
+    res.status(201).json({ msg: "Goal added successfully", goal: savedGoal });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Internal server error", error });
