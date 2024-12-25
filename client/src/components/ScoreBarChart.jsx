@@ -9,33 +9,26 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const ScoreBarChart = () => {
-  const newData = [
-    { name: "User 1", score: 98 },
-    { name: "User 2", score: 87 },
-    { name: "User 3", score: 75 },
-    { name: "User 4", score: 65 },
-    { name: "User 5", score: 50 },
-  ];
+const ScoreBarChart = ({data}) => {
 
-  const sortedData = newData.sort((a, b) => b.score - a.score);
+  const sortedData = data.sort((a, b) => b.monthlyPoints - a.monthlyPoints);
   const colors = ["#FFD700", "#C0C0C0", "#CD7F32", "#848482"];
 
-  const data = sortedData.map((data, index) => {
+  const graphData = sortedData.map((data, index) => {
     const rank = index < 3 ? index : 3;
     return { ...data, color: colors[rank] };
   });
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={400}>
       <BarChart
-        data={data}
+        data={graphData}
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
-        <XAxis dataKey="name" />
+        <XAxis dataKey="username" />
         <Tooltip />
         <Bar
-          dataKey="score"
+          dataKey="monthlyPoints"
           label={{ position: "top" }}
           isAnimationActive={true}
           shape={(props) => {
