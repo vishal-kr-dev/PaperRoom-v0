@@ -17,7 +17,7 @@ const Navbar = () => {
     location.pathname === "/login" || location.pathname === "/signup";
 
   return (
-    <nav className="bg-primary-bg sticky top-0">
+    <nav className="bg-primary-bg sticky top-0 z-10">
       {isAuthRoute ? (
         <div className="flex items-center justify-between px-8 h-16  shadow-lg border-b border-hover">
           <img src={logo} className="w-56" alt="PAPER ROOM" />

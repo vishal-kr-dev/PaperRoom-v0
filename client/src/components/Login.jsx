@@ -1,19 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate, Link } from 'react-router-dom';
-import useAuthStore from '../zustandStore/authStore'; // Adjust the path as needed
-import { Eye, EyeOff } from 'lucide-react'; 
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, Link } from "react-router-dom";
+import useAuthStore from "../Store/authStore"; // Adjust the path as needed
+import { Eye, EyeOff } from "lucide-react";
 const LoginForm = () => {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-  const { login, loginError, resetLoginError, isAuthenticated } = useAuthStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+  const { login, loginError, resetLoginError, isAuthenticated } =
+    useAuthStore();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState('')
+  const [showPassword, setShowPassword] = useState("");
 
   // Redirect if already authenticated
   useEffect(() => {
     console.log("The user is authenticated", isAuthenticated);
     if (isAuthenticated) {
-      navigate('/'); // Redirect to home if logged in
+      navigate("/"); // Redirect to home if logged in
     }
   }, [isAuthenticated, navigate]);
 
@@ -21,7 +26,7 @@ const LoginForm = () => {
     const userData = await login(data);
     if (userData) {
       // Handle successful login, e.g., navigate
-      navigate('/');
+      navigate("/");
     }
   };
 
@@ -31,10 +36,14 @@ const LoginForm = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white-100">
       <div className="w-full max-w-md bg-white p-8">
-        <h2 className="text-3xl font-extrabold mb-6 text-center">Sign in to your account</h2>
+        <h2 className="text-3xl font-extrabold mb-6 text-center">
+          Sign in to your account
+        </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-1">
-            <label htmlFor="username" className="sr-only">Username</label>
+            <label htmlFor="username" className="sr-only">
+              Username
+            </label>
             <input
               id="username"
               type="text"
@@ -42,18 +51,21 @@ const LoginForm = () => {
                 required: "Username is required",
                 pattern: {
                   // value: /^[a-z0-9]+$/,
-                  message: "Invalid Username"
+                  message: "Invalid Username",
                 },
-
               })}
               className="w-full px-3 py-2 border border-gray-300 focus:outline-none"
               placeholder="Username"
             />
-            {errors.username && <p className="text-xs text-red-600">{errors.username.message}</p>}
+            {errors.username && (
+              <p className="text-xs text-red-600">{errors.username.message}</p>
+            )}
           </div>
           <div className="space-y-1">
             <div className="relative">
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -72,10 +84,16 @@ const LoginForm = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
-                {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <Eye className="h-5 w-5 text-gray-400" />
+                )}
               </button>
             </div>
-            {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-xs text-red-600">{errors.password.message}</p>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -85,18 +103,26 @@ const LoginForm = () => {
                 {...register("rememberMe")}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-900"
+              >
                 Remember me
               </label>
             </div>
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <a
+                href="#"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Forgot your password?
               </a>
             </div>
           </div>
           <div>
-            <h3 className="text-l font-bold mb-6 text-center text-red-600">{loginError}</h3>
+            <h3 className="text-l font-bold mb-6 text-center text-red-600">
+              {loginError}
+            </h3>
 
             <button
               type="submit"
@@ -131,8 +157,11 @@ const LoginForm = () => {
           </div>
         </div>
         <p className="mt-8 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
             Sign up
           </Link>
         </p>

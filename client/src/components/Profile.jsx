@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Avatar from "react-avatar"
 
 import HistoryCard from "./HistoryCard";
 import dummy from "../assets/profile.webp";
@@ -30,8 +31,9 @@ const Profile = () => {
       {/* Profile section */}
       <section className="flex items-center justify-center text-white font-semibold text-2xl">
         <div>
-          <div className="p-2">
-            <img src={dummy} alt="" className="size-48 border rounded-full" />
+          <div className="mt-7 flex items-center justify-center">
+            {/* <img src={dummy} alt="" className="size-48 border rounded-full" /> */}
+            <Avatar name={username} size="160" round={true} textSizeRatio={1.5} />
           </div>
           <div className="p-2">
             <p>Username: {username}</p>
