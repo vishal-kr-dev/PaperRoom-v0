@@ -6,8 +6,8 @@ import { saveGoals, updateGoals, updateSubGoal, deleteGoal } from "../controller
 const router= express.Router()
 
 router.post("/save", verifyUser, saveGoals)
+router.delete("/delete", verifyUser, deleteGoal);
 router.put("/update/:goalId", verifyUser, updateGoals);
-router.delete("/delete/:goalId", verifyUser, deleteGoal);
 router.put("/update-subtask/:goalId/:subtaskId", verifyUser, updateSubGoal);
 
 export default router

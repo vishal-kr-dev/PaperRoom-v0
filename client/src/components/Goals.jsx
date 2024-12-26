@@ -3,16 +3,18 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 import useUserDataStore from "../Store/dataStore";
+import axiosInstance from "../axiosInstance";
 
 const Goals = () => {
   const baseURL = import.meta.env.VITE_BACK_URL;
 
   const [description, setDescription] = useState("");
-  const [deadline, setDeadline] = useState("");
+  const [points, setPoints] = useState(3);
   const [subtasks, setSubtasks] = useState([]);
+  const [deadline, setDeadline] = useState("");
   const [newSubtask, setNewSubtask] = useState("");
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
-  const {goals, setNewGoal, setGoals} = useUserDataStore();
+  const { goals, setNewGoal, setGoals } = useUserDataStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,22 +22,20 @@ const Goals = () => {
     const formData = {
       description,
       deadline,
+      points,
       subtasks,
       isCompleted: isTaskCompleted,
     };
 
     try {
-      const response = await axios.post(`${baseURL}/goals/save`, formData, {
-        headers: {
-          Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
-        },
-      });
+      const response = await axiosInstance.post("/goals/save", formData);
 
       if (response.status === 201) {
-        setNewGoal(response.data.goal)
-        toast.success("Saved successfully");
+        setNewGoal(response.data.goal);
+        toast.success("Submitted successfully");
         setDescription("");
         setDeadline("");
+        setPoints(3)
         setSubtasks([]);
         setIsTaskCompleted(false);
       } else {
@@ -57,22 +57,19 @@ const Goals = () => {
   };
 
   const deleteGoal = async (goalId) => {
-    const loadingToast = toast.loading("Deleting...")
+    const loadingToast = toast.loading("Deleting...");
+    console.log(goalId)
 
     try {
-      const response = await axios.delete(`${baseURL}/goals/delete/${goalId}`, {
-        headers: {
-          Authorization: `Bearer ${window.localStorage.getItem("jwtToken")}`,
-        },
-      });
+      const response = await axiosInstance.delete('/goals/delete',{data:{goalId}})
 
       if (response.status === 200) {
-        toast.success("Goal deleted successfully", {id: loadingToast});
+        toast.success("Goal deleted successfully", { id: loadingToast });
 
         const updatedGoals = goals.filter((goal) => goal._id !== goalId);
-        setGoals(updatedGoals)
+        setGoals(updatedGoals);
       } else {
-        toast.error("Error: Couldn't delete goal", {id: loadingToast});
+        toast.error("Error: Couldn't delete goal", { id: loadingToast });
       }
     } catch (error) {
       toast.error("Error while deleting goal");
@@ -93,17 +90,41 @@ const Goals = () => {
               className="px-4 py-2 w-full  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-            <input
-              type="date"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              className="px-4 py-2 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <input
-              type="submit"
-              value="Submit"
-              className="bg-orange-500 text-white px-3 py-2 font-bold rounded-lg cursor-pointer hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <label
+                htmlFor="difficulty"
+                className="text-lg text-gray-700 font-semibold"
+              >
+                Deadline:
+              </label>
+              <input
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label
+                htmlFor="points"
+                className="text-lg text-gray-700 font-semibold"
+              >
+                Length:
+              </label>
+              <select
+                id="points"
+                value={points}
+                onChange={(e) => setPoints(e.target.value)}
+                className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option value="3">Quick Task (1-3 hr)</option>
+                <option value="5">Moderate Task (3-8 hr)</option>
+                <option value="7">Challenging Task (8 hr)</option>
+              </select>
+            </div>
           </div>
 
           {/* Subtask */}
@@ -111,7 +132,7 @@ const Goals = () => {
             <div className="flex items-center space-x-2">
               <input
                 type="text"
-                placeholder="Add subtask..."
+                placeholder="Add subtask... (Optional)"
                 value={newSubtask}
                 onChange={(e) => setNewSubtask(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -133,13 +154,19 @@ const Goals = () => {
                     type="checkbox"
                     checked={subtask.isCompleted}
                     readOnly
-                    // onChange={() => toggleSubtaskCompletion(index)}
                     className="size-4 text-blue-500 "
                   />
                   <span className="text-white">{subtask.description}</span>
                 </li>
               ))}
             </ul>
+          </div>
+          <div className="flex items-center justify-center w-full">
+            <input
+              type="submit"
+              value="Submit"
+              className="bg-orange-500 w-full text-white px-3 py-2 font-bold rounded-lg cursor-pointer hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
           </div>
         </form>
       </section>
