@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Avatar from "react-avatar"
+import Avatar from "react-avatar";
 
 import HistoryCard from "./HistoryCard";
-import dummy from "../assets/profile.webp";
 import useUserDataStore from "../Store/dataStore";
 
 const Profile = () => {
   const baseURL = import.meta.env.VITE_BACK_URL;
   const [data, setData] = useState([]);
-  const { username, roomId } = useUserDataStore();
+  const { roomId } = useUserDataStore();
+  const { user } = useParams();
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${baseURL}/history/${username}`);
+      const response = await axios.get(`${baseURL}/history/${user}`);
 
       setData(response.data.historyEntries);
     } catch (error) {
@@ -33,10 +33,15 @@ const Profile = () => {
         <div>
           <div className="mt-7 flex items-center justify-center">
             {/* <img src={dummy} alt="" className="size-48 border rounded-full" /> */}
-            <Avatar name={username} size="160" round={true} textSizeRatio={1.5} />
+            <Avatar
+              name={user}
+              size="160"
+              round={true}
+              textSizeRatio={1.5}
+            />
           </div>
           <div className="p-2">
-            <p>Username: {username}</p>
+            <p>Username: {user}</p>
             <p>RoomId: {roomId}</p>
             {/* <p>Socials</p> */}
           </div>

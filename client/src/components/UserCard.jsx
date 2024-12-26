@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Avatar from "react-avatar"
-import profile from "../assets/profile.webp";
 
 const UserCard = (prop) => {
   return (

@@ -5,6 +5,7 @@ const userDataStore = (set) => ({
   username: "",
   roomId: "",
   goals: [],
+  users:[],
 
   setUser: (user) => set({ username: user }),
   setRoomId: (id) => set({ roomId: id }),
@@ -14,6 +15,7 @@ const userDataStore = (set) => ({
       goals: [goal, ...state.goals],
     }));
   },
+  setUsers: (users) => set({users: users})
 });
 
 const useUserDataStore = create(

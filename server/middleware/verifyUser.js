@@ -26,7 +26,7 @@ const verifyUser = async (req, res, next) => {
 
     req.user = user
     req.body.username = decoded.username;
-    console.log("User verified ✅",);
+    // console.log("User verified ✅",);
 
     next();
   } catch (error) {

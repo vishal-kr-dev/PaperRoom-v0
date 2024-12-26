@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 import useUserDataStore from "../Store/dataStore";
 import axiosInstance from "../axiosInstance";
+import { Trash } from "lucide-react";
 
 const Goals = () => {
   const baseURL = import.meta.env.VITE_BACK_URL;
@@ -23,7 +24,7 @@ const Goals = () => {
       description,
       deadline,
       points,
-      subtasks,
+      // subtasks,
       isCompleted: isTaskCompleted,
     };
 
@@ -35,7 +36,7 @@ const Goals = () => {
         toast.success("Submitted successfully");
         setDescription("");
         setDeadline("");
-        setPoints(3)
+        setPoints(3);
         setSubtasks([]);
         setIsTaskCompleted(false);
       } else {
@@ -58,10 +59,11 @@ const Goals = () => {
 
   const deleteGoal = async (goalId) => {
     const loadingToast = toast.loading("Deleting...");
-    console.log(goalId)
 
     try {
-      const response = await axiosInstance.delete('/goals/delete',{data:{goalId}})
+      const response = await axiosInstance.delete("/goals/delete", {
+        data: { goalId },
+      });
 
       if (response.status === 200) {
         toast.success("Goal deleted successfully", { id: loadingToast });
@@ -128,7 +130,7 @@ const Goals = () => {
           </div>
 
           {/* Subtask */}
-          <div className="flex flex-col gap-4">
+          {/* <div className="flex flex-col gap-4">
             <div className="flex items-center space-x-2">
               <input
                 type="text"
@@ -144,10 +146,10 @@ const Goals = () => {
               >
                 Add Subtask
               </button>
-            </div>
+            </div> */}
 
-            {/* List of subtasks */}
-            <ul className="space-y-2">
+          {/* List of subtasks */}
+          {/* <ul className="space-y-2">
               {subtasks.map((subtask, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <input
@@ -160,7 +162,8 @@ const Goals = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
+
           <div className="flex items-center justify-center w-full">
             <input
               type="submit"
@@ -185,29 +188,39 @@ const Goals = () => {
             goals.map((g, gIndex) => (
               <div
                 key={g._id}
-                className="font-bold bg-secondary-bg rounded-xl p-4 mb-2"
+                className="flex justify-between font-bold bg-secondary-bg rounded-xl p-4 mb-2"
               >
-                <input
-                  type="checkbox"
-                  className="size-4 mr-2"
-                  checked={g.isCompleted}
-                  readOnly
-                />
-                <label
-                  className={` ${
-                    g.isCompleted ? "line-through text-gray-500" : "text-white"
-                  }`}
-                >
-                  {g.description}
-                </label>
+                <div>
+                  <input
+                    type="checkbox"
+                    className="size-4 mr-2"
+                    checked={g.isCompleted}
+                    readOnly
+                  />
+                  <label
+                    className={` ${
+                      g.isCompleted
+                        ? "line-through text-gray-500"
+                        : "text-white"
+                    }`}
+                  >
+                    {g.description}
+                  </label>
+                </div>
                 <button
                   onClick={() => deleteGoal(g._id)}
-                  className="ml-4 text-red-500 hover:text-red-700"
+                  className="ml-4 flex items-center justify-center w-8 h-8 rounded-full bg-red-100 text-red-500 hover:bg-red-500 hover:text-white hover:scale-105 transition duration-200 ease-in-out group"
                 >
-                  Delete Goal
+                  <Trash
+                    size={20}
+                    className="group-hover:scale-110 transition-transform duration-150"
+                  />
+                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    Delete
+                  </span>
                 </button>
 
-                {g.subtasks?.length > 0 && (
+                {/* {g.subtasks?.length > 0 && (
                   <ul className="space-y-2 pt-2 pl-6">
                     {g.subtasks.map((subtask, subtaskIndex) => (
                       <li
@@ -232,7 +245,7 @@ const Goals = () => {
                       </li>
                     ))}
                   </ul>
-                )}
+                )} */}
               </div>
             ))
           ) : (

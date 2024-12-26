@@ -6,31 +6,31 @@ const GoalsSchema = new mongoose.Schema({
     required: true,
   },
   points: {
-    type: Number, 
+    type: Number,
     required: true,
   },
-  subtasks: [
-    {
-      description: {
-        type: String,
-        required: true,
-      },
-      point: {
-        type: Number,
-        default: 1,
-        immutable: true
-      },
-    },
-  ],
-  priority: {
-    type: String,
-    enum: ['low', 'medium', 'high'],
-    default: 'medium'
-  },
-  dueDate:{
+  // subtasks: [
+  //   {
+  //     description: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //     point: {
+  //       type: Number,
+  //       default: 1,
+  //       immutable: true,
+  //     },
+  //   },
+  // ],
+  // priority: {
+  //   type: String,
+  //   enum: ['low', 'medium', 'high'],
+  //   default: 'medium'
+  // },
+  deadline: {
     type: Date,
-    default: null    
-  }
+    default: null,
+  },
 });
 
 const RoomSchema = new mongoose.Schema({
@@ -41,7 +41,7 @@ const RoomSchema = new mongoose.Schema({
   },
   users: [
     {
-      type: mongoose.Schema.Types.String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
     },
   ],
@@ -49,7 +49,7 @@ const RoomSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  tasks: [GoalsSchema]
+  goals: [GoalsSchema],
 });
 
 const RoomModel = mongoose.model("Room", RoomSchema);
