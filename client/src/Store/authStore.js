@@ -13,6 +13,8 @@ const useAuthStore = create((set) => ({
   setLoginError: (error) => set({ loginError: error }),
   resetLoginError: () => set({ loginError: "" }),
 
+  setIsAuthenticated: (bool) => set({isAuthenticated: bool}),
+
   // Function to log in and store JWT token
   login: async (data) => {
     set({ isSubmitting: true, loginError: "" });
