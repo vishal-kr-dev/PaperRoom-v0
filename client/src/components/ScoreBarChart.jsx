@@ -26,7 +26,7 @@ const ScoreBarChart = ({data}) => {
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
         <XAxis dataKey="username" />
-        <Tooltip />
+        {/* <Tooltip /> */}
         <Bar
           dataKey="monthlyPoints"
           label={{ position: "top" }}
