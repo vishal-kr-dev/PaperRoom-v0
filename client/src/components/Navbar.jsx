@@ -29,44 +29,44 @@ const Navbar = () => {
     <nav className="bg-primary-bg sticky top-0 z-10">
       {isAuthRoute ? (
         <div className="flex items-center justify-between px-8 h-16  shadow-lg border-b border-hover">
-          <img src={logo} className="w-56" alt="PAPER ROOM" />
+          <img src={logo} className="w-44 sm:w-56" alt="PAPER ROOM" />
         </div>
       ) : (
         <div className="flex items-center justify-between px-3 h-16  shadow-lg border-b border-hover">
-          <img src={logo} className="w-56" alt="PAPER ROOM" />
+          <img src={logo} className="w-44 sm:w-56" alt="PAPER ROOM" />
 
           {/* + button */}
           {location.pathname === "/" && (
             <button
-              className="flex items-center justify-center w-32 h-12 border-2 border-white rounded-lg text-white text-2xl font-bold  hover:text-green-500 transition duration-300"
+              className="flex items-center justify-center w-16 sm:w-32 h-12 border-2 border-white rounded-lg text-white text-2xl font-bold  hover:text-green-500 transition duration-300"
               onClick={() => setIsModalOpen(true)}
             >
               <Plus />
             </button>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2">
             {/* Profile Button */}
             {location.pathname === "/" ? (
               <button
-                className="flex items-center justify-center gap-1 w-24 h-10 text-lg rounded-lg text-white border-2 font-semibold bg-accent hover:text-accent hover:bg-white hover:border-accent hover:scale-105 transition-transform duration-200"
+                className="flex items-center justify-center gap-1 w-10 sm:w-24 h-10 text-lg rounded-lg text-white border-2 font-semibold bg-accent hover:text-accent hover:bg-white hover:border-accent hover:scale-105 transition-transform duration-200"
                 onClick={() => navigate(`/user/${username}`)}
               >
                 <CircleUserRound />
-                Profile
+                <span className="hidden sm:inline">Profile</span>
               </button>
             ) : (
               <button
-                className="flex items-center justify-center gap-1 w-24 h-10 text-lg rounded-lg text-white border-2 font-semibold bg-accent hover:text-accent hover:bg-white hover:border-accent hover:scale-105 transition-transform duration-200"
+                className="flex items-center justify-center gap-1 w-10 sm:w-24 h-10 text-lg rounded-lg text-white border-2 font-semibold bg-accent hover:text-accent hover:bg-white hover:border-accent hover:scale-105 transition-transform duration-200"
                 onClick={() => navigate("/")}
               >
                 <Home />
-                Home
+                <span className="hidden sm:inline">Home</span>
               </button>
             )}
-            <button className="flex items-center justify-center gap-1 w-24 h-10 text-lg rounded-lg text-white bg-red-600 border-2 font-semibold hover:text-red-600 hover:bg-white hover:border-red-600 hover:scale-105 transition-transform duration-200" onClick={() => logOut()}>
+            <button className="flex items-center justify-center gap-1 w-10 sm:w-24 h-10 text-lg rounded-lg text-white bg-red-600 border-2 font-semibold hover:text-red-600 hover:bg-white hover:border-red-600 hover:scale-105 transition-transform duration-200" onClick={() => logOut()}>
               <LogOut />
-              Logout
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </div>

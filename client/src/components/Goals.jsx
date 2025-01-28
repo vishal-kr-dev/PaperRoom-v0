@@ -15,6 +15,7 @@ const Goals = () => {
   const [deadline, setDeadline] = useState("");
   const [newSubtask, setNewSubtask] = useState("");
   const [isTaskCompleted, setIsTaskCompleted] = useState(false);
+  const [frequency, setFrequency] = useState(1)
   const { goals, setNewGoal, setGoals } = useUserDataStore();
 
   const handleSubmit = async (e) => {
@@ -93,8 +94,8 @@ const Goals = () => {
               required
             />
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2 mb-1">
               <label
                 htmlFor="difficulty"
                 className="text-lg text-gray-700 font-semibold"
@@ -109,7 +110,7 @@ const Goals = () => {
               />
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-1">
               <label
                 htmlFor="points"
                 className="text-lg text-gray-700 font-semibold"
@@ -125,6 +126,24 @@ const Goals = () => {
                 <option value="3">Quick Task (1-3 hr)</option>
                 <option value="5">Moderate Task (3-8 hr)</option>
                 <option value="7">Challenging Task (8 hr)</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2 mb-1">
+              <label
+                htmlFor="frequency"
+                className="text-lg text-gray-700 font-semibold"
+              >
+                Frequency:
+              </label>
+              <select
+                id="frequency"
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+                className="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option value="1">Once</option>
+                <option value="0">Daily</option>
               </select>
             </div>
           </div>
